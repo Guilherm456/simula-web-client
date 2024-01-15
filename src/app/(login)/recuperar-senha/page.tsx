@@ -56,7 +56,7 @@ export default function RecuperarSenha() {
 
         <Button onClick={handleSubmit(mutate)}>
           {isPending && <Spinner className="h-4 w-4" />}
-          Entrar
+          Recuperar senha
         </Button>
       </div>
     </>

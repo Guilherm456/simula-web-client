@@ -79,7 +79,7 @@ export default function Login() {
             required: true,
           })}
         />
-        <Button onClick={handleSubmit(mutate as any)}>
+        <Button onClick={handleSubmit(mutate as any)} type="submit">
           {isPending && <Spinner className="h-4 w-4" />}
           Entrar
         </Button>
