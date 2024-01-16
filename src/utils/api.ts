@@ -1,7 +1,6 @@
-// utils/fetchWithAuth.ts
-
-import { getCookie } from "cookies-next";
 import { errorNotification } from ".";
+import { getTokenClientSide } from "./tokens/clientToken";
+import { getTokenServerSide } from "./tokens/serverToken";
 
 type FetchOptions = RequestInit & { params?: { [key: string]: any } };
 
@@ -19,11 +18,7 @@ const buildQueryString = (params: { [key: string]: any }): string => {
 
 const fetchWithAuth = {
   async get<T>(url: string, options: FetchOptions = {}): Promise<T> {
-    const queryString = options.params
-      ? `?${buildQueryString(options.params)}`
-      : "";
-    const fullUrl = `${url}${queryString}`;
-    return this.request<T>(fullUrl, { ...options, method: "GET" });
+    return this.request<T>(url, { ...options, method: "GET" });
   },
 
   async post<T>(
@@ -57,26 +52,32 @@ const fetchWithAuth = {
   },
 
   async request<T>(endpoint: string, options: FetchOptions): Promise<T> {
-    const baseUrl = process.env.NEXT_PUBLIC_API;
-    const url = `${baseUrl}${endpoint}`;
+    const queryString = options.params
+      ? `?${buildQueryString(options.params)}`
+      : "";
 
-    if (isClientSide()) {
-      const token = getCookie("access_token");
-      // Preparar os cabeçalhos básicos
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      // Definir Content-Type para application/json, exceto quando o corpo é FormData
-      if (!(options.body instanceof FormData)) {
-        headers["Content-Type"] = "application/json";
-      }
+    const url = `${process.env.NEXT_PUBLIC_API}${endpoint}${queryString}`;
 
-      // Mesclar os cabeçalhos passados com os cabeçalhos padrão
-      options.headers = {
-        ...headers,
-        ...options.headers,
-      };
+    // Obter o token de acesso do cookie
+    const token = isClientSide() ? getTokenClientSide() : getTokenServerSide();
+
+    // Preparar os cabeçalhos básicos
+    const headers: RequestInit["headers"] = token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {};
+
+    // Definir Content-Type para application/json, exceto quando o corpo é FormData
+    if (!(options.body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
     }
+
+    // Mesclar os cabeçalhos passados com os cabeçalhos padrão
+    options.headers = {
+      ...headers,
+      ...options.headers,
+    };
 
     try {
       const response = await fetch(url, options);
@@ -93,7 +94,7 @@ const fetchWithAuth = {
       if (isClientSide())
         errorNotification(`${error?.message ?? "Sem conexão com o servidor"}`);
 
-      throw error;
+      throw error?.message ?? "Sem conexão com o servidor";
     }
   },
 };
