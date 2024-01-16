@@ -38,13 +38,13 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = form;
 
   const router = useRouter();
 
   const [query, setQuery] = useState("");
-  const [parameters, setParameters] = useState<any[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -57,43 +57,48 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ["create"],
+    mutationKey: ["bases"],
     mutationFn: async (data: CreateBaseDTO) => await createBase(data),
     onSuccess: (data) => {
+      infoNotification("Base criada com sucesso!");
       queryClient.invalidateQueries({
         queryKey: ["bases"],
+        exact: false,
       });
-      infoNotification("Base criada com sucesso!");
+
       router.push(`/${data._id}`);
     },
   });
 
   const { mutate: mutateUpload, isPending: pendingUpload } = useMutation({
-    mutationKey: ["upload"],
+    mutationKey: ["bases"],
     mutationFn: async (data: CreateBaseWithFilesDTO) =>
       createBaseWithFiles(data),
     onSuccess: (data) => {
+      infoNotification("Base criada com sucesso!");
       queryClient.invalidateQueries({
         queryKey: ["bases"],
+        exact: false,
       });
-
-      infoNotification("Base criada com sucesso!");
       router.push(`/${data._id}`);
     },
   });
 
   const onSendFiles = useCallback(
     (files: File[], indexParam: number) => {
-      console.debug(files, indexParam, watch("files"));
       files.forEach((file) => {
         const onlyName = file.name.split(".")[0];
-
         let index = -1;
-        const { subParameters, name } = parameters[indexParam];
-        const indexSub = subParameters.findIndex(
-          (sub: string) => sub === onlyName,
+        const { subParameters, name } =
+          (watch("type") as Structure)?.parameters.find(
+            (_, index) => index === indexParam,
+          ) ?? {};
+
+        const indexSub = subParameters?.findIndex(
+          (sub) => sub.name === onlyName,
         );
-        if (indexSub !== -1) {
+
+        if (indexSub !== undefined && indexSub !== -1) {
           index = indexParam + indexSub + (indexParam > 0 ? 1 : 0);
         } else if (name === onlyName) {
           index = indexParam;
@@ -111,7 +116,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
         infoNotification("Arquivo(s) importado(s) com sucesso!");
       });
     },
-    [structures, parameters],
+    [structures],
   );
 
   useEffect(() => {
@@ -119,17 +124,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
 
     const structure = watch("type") as Structure;
 
-    const params = Object.keys(structure?.parameters);
-    const parameters = params.map((param) => ({
-      name: param,
-      subParameters:
-        typeof structure?.parameters[param] === "object"
-          ? Object.keys(structure?.parameters[param])
-          : [],
-    }));
-
     setValue("files", Array.from({ length: structure.lengthParams }));
-    setParameters(parameters);
   }, [watch("type")]);
 
   const onSubmit = async (data: CreateBaseWithFilesDTO) => {
@@ -140,13 +135,18 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
     mutateUpload(data);
   };
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
     <>
       <Dialog
         open={open}
         modal
         onOpenChange={(open) => {
-          if (!open) onClose();
+          if (!open) handleClose();
         }}
       >
         <DialogContent className="max-h-dvh h-[100dvh] w-[100dvw] max-w-[100dvw] overflow-y-auto md:h-[650px] md:w-[770px] md:rounded-l-2xl">
@@ -183,11 +183,10 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
 
             <ParametersExibition
               onSendFiles={onSendFiles}
-              parameters={parameters}
+              parameters={(watch("type") as Structure)?.parameters}
               onCreateBase={handleSubmit((data) => {
                 delete data.files;
-                data.parameters = (watch("type") as Structure)?.parameters;
-                mutate(data);
+                mutate(data as CreateBaseDTO);
               })}
             />
 
@@ -195,13 +194,13 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
               <Button
                 className="w-full bg-gray-3 text-gray-12"
                 disabled={isPending || pendingUpload}
-                onClick={onClose}
+                onClick={handleClose}
               >
                 Cancelar
               </Button>
               <Button
                 className="w-full"
-                onClick={handleSubmit(onSubmit)}
+                onClick={handleSubmit(onSubmit as any)}
                 loading={isPending || pendingUpload}
               >
                 Criar

@@ -1,3 +1,4 @@
+import { StructureParameters } from "@models/structure.model";
 import { cn } from "@utils/utils";
 import { Check, Upload } from "lucide-react";
 import { FC } from "react";
@@ -5,10 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { UploadFile } from "./uploadFile";
 
 interface Props {
-  parameters?: {
-    name: string;
-    subParameters?: string[];
-  }[];
+  parameters?: StructureParameters[];
 
   onSendFiles: (files: File[], index: number) => void;
   onCreateBase: () => void;
@@ -57,25 +55,23 @@ export const ParametersExibition: FC<Props> = ({
                     </div>
                     <div className="text-center">
                       {param.subParameters?.length ? (
-                        param.subParameters?.map(
-                          (subParam: string, index: number) => (
-                            <span
-                              key={index}
-                              className={cn(
-                                "line-clamp-1 text-sm ",
-                                watch(
-                                  `files.${
-                                    mainIndex + index + (mainIndex > 0 ? 1 : 0)
-                                  }`,
-                                )
-                                  ? "text-green-600 underline"
-                                  : "text-gray-11",
-                              )}
-                            >
-                              -{subParam}
-                            </span>
-                          ),
-                        )
+                        param.subParameters?.map((subParam, index: number) => (
+                          <span
+                            key={index}
+                            className={cn(
+                              "line-clamp-1 text-sm ",
+                              watch(
+                                `files.${
+                                  mainIndex + index + (mainIndex > 0 ? 1 : 0)
+                                }`,
+                              )
+                                ? "text-green-600 underline"
+                                : "text-gray-11",
+                            )}
+                          >
+                            -{subParam.name}
+                          </span>
+                        ))
                       ) : (
                         <span className="text-sm text-gray-11">
                           Não possui subparametros

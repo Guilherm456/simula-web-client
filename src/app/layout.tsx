@@ -24,7 +24,7 @@ export default function RootLayout({
         <ReduxWrapper>
           <Auth>{children}</Auth>
         </ReduxWrapper>
-        <Toaster />
+        <Toaster richColors />
       </body>
     </html>
   );

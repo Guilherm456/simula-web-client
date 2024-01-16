@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser } from "@services/login";
+import { getUser, logout } from "@services/login";
 import { useAppDispatch, useAppSelector } from "@utils/hooks";
 import { setLogin } from "@utils/store";
 import { getCookie } from "cookies-next";
@@ -22,14 +22,19 @@ export const Auth: FC<Props> = ({ children }) => {
     if (!isLogged) {
       const token = getCookie("access_token");
       if (token) {
-        const user = await getUser();
-        dispatch(
-          setLogin({
-            isLogged: true,
-            user,
-            accessToken: token,
-          }),
-        );
+        try {
+          const user = await getUser();
+          dispatch(
+            setLogin({
+              isLogged: true,
+              user,
+              accessToken: token,
+            }),
+          );
+        } catch (e) {
+          logout();
+          router.push("/login");
+        }
 
         if (pathName.includes("login")) {
           router.push("/");
