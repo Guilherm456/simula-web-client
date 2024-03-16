@@ -41,24 +41,26 @@ export default function RecuperarSenha() {
         </span>
       </div>
 
-      <div className="space-y-4">
-        <Textfield
-          label="E-mail"
-          placeholder="Digite seu e-mail"
-          aria-label="E-mail"
-          type="email"
-          error={!!errors.email?.message}
-          errorMessage={errors.email?.message}
-          {...register("email", {
-            required: true,
-          })}
-        />
+      <form id="recover-password-form" onSubmit={handleSubmit(mutate as any)}>
+        <div className="space-y-4">
+          <Textfield
+            label="E-mail"
+            placeholder="Digite seu e-mail"
+            aria-label="E-mail"
+            type="email"
+            error={!!errors.email?.message}
+            errorMessage={errors.email?.message}
+            {...register("email", {
+              required: true,
+            })}
+          />
 
-        <Button onClick={handleSubmit(mutate)}>
-          {isPending && <Spinner className="h-4 w-4" />}
-          Recuperar senha
-        </Button>
-      </div>
+          <Button type="submit">
+            {isPending && <Spinner className="h-4 w-4" />}
+            Recuperar senha
+          </Button>
+        </div>
+      </form>
     </>
   );
 }

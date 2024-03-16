@@ -56,41 +56,43 @@ export default function Login() {
         </span>
       </div>
 
-      <div className="space-y-4">
-        <Textfield
-          label="E-mail"
-          placeholder="Digite seu e-mail"
-          aria-label="E-mail"
-          type="email"
-          error={!!errors.email?.message}
-          errorMessage={errors.email?.message}
-          {...register("email", {
-            required: true,
-          })}
-        />
-        <Textfield
-          label="Senha"
-          placeholder="Digite sua senha"
-          aria-label="Senha"
-          type="password"
-          error={!!errors.password?.message}
-          errorMessage={errors.password?.message}
-          {...register("password", {
-            required: true,
-          })}
-        />
-        <Button onClick={handleSubmit(mutate as any)} type="submit">
-          {isPending && <Spinner className="h-4 w-4" />}
-          Entrar
-        </Button>
+      <form id="login-form" onSubmit={handleSubmit(mutate as any)}>
+        <div className="space-y-4">
+          <Textfield
+            label="E-mail"
+            placeholder="Digite seu e-mail"
+            aria-label="E-mail"
+            type="email"
+            error={!!errors.email?.message}
+            errorMessage={errors.email?.message}
+            {...register("email", {
+              required: true,
+            })}
+          />
+          <Textfield
+            label="Senha"
+            placeholder="Digite sua senha"
+            aria-label="Senha"
+            type="password"
+            error={!!errors.password?.message}
+            errorMessage={errors.password?.message}
+            {...register("password", {
+              required: true,
+            })}
+          />
+          <Button type="submit">
+            {isPending && <Spinner className="h-4 w-4" />}
+            Entrar
+          </Button>
 
-        <Link
-          className="inline-block w-full text-end text-sm font-semibold text-blue-700 underline"
-          href="/recuperar-senha"
-        >
-          Esqueci minha senha
-        </Link>
-      </div>
+          <Link
+            className="inline-block w-full text-end text-sm font-semibold text-blue-700 underline"
+            href="/recuperar-senha"
+          >
+            Esqueci minha senha
+          </Link>
+        </div>
+      </form>
     </>
   );
 }
