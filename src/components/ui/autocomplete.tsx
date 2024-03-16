@@ -5,6 +5,7 @@ import { Combobox } from "@headlessui/react";
 import debounce from "lodash/debounce";
 import { v4 } from "uuid";
 
+import { InfiniteScroll } from "@components/general/infiniteScroll";
 import { cn } from "@utils/utils";
 import { ComponentProps, ReactNode } from "react";
 import { Textfield, TextfieldProps } from ".";
@@ -24,12 +25,17 @@ export type AutocompleteProps = {
   onSearch?: (query: string) => void;
   ms?: number;
 
+  error?: boolean;
+  errorMessage?: string;
+
   disabled?: boolean;
 
   classNameOptions?: string;
   classNameList?: string;
 
   inputProps?: TextfieldProps;
+
+  onMore?: () => void;
 } & Omit<ComponentProps<"div">, "children">;
 
 export const Autocomplete: FC<AutocompleteProps> = ({
@@ -49,6 +55,9 @@ export const Autocomplete: FC<AutocompleteProps> = ({
   ms = 500,
   emptyMessage = "Nenhum resultado encontrado",
   onSearch,
+  onMore,
+  error,
+  errorMessage,
   id = `autocomplete-${v4()}`,
 }) => {
   const [localValue, setLocalValue] = useState(valueProp);
@@ -116,6 +125,8 @@ export const Autocomplete: FC<AutocompleteProps> = ({
             setLocalValue(undefined);
             handleChange(event.currentTarget.value);
           },
+          error,
+          errorMessage,
           placeholder,
           onBlur: () => onClose(),
           onFocus: () => setOpen(true),
@@ -124,30 +135,32 @@ export const Autocomplete: FC<AutocompleteProps> = ({
           "aria-expanded": open,
           value: localValue ? getOptionLabel(localValue) : query,
         })}
-        <Combobox.Options
-          static={open}
-          className={cn(
-            " max-h-[20dvh] w-full list-none overflow-y-scroll",
-            classNameList,
-          )}
-        >
-          {filteredOptions?.length === 0 ? (
-            <li className="min-h-10 px-3 py-2 text-center font-semibold text-gray-10">
-              {emptyMessage}
-            </li>
-          ) : (
-            filteredOptions?.map((option) => (
-              <Combobox.Option
-                id={`autocomplete-option-${v4()}`}
-                disabled={option?.disabled}
-                value={option}
-                className={cn("cursor-pointer", classNameOptions)}
-              >
-                {renderOption(option)}
-              </Combobox.Option>
-            ))
-          )}
-        </Combobox.Options>
+        <InfiniteScroll onEndReached={onMore}>
+          <Combobox.Options
+            static={open}
+            className={cn(
+              " max-h-[20dvh] w-full list-none overflow-y-scroll",
+              classNameList,
+            )}
+          >
+            {filteredOptions?.length === 0 ? (
+              <li className="min-h-10 px-3 py-2 text-center font-semibold text-gray-10">
+                {emptyMessage}
+              </li>
+            ) : (
+              filteredOptions?.map((option) => (
+                <Combobox.Option
+                  id={`autocomplete-option-${v4()}`}
+                  disabled={option?.disabled}
+                  value={option}
+                  className={cn("cursor-pointer", classNameOptions)}
+                >
+                  {renderOption(option)}
+                </Combobox.Option>
+              ))
+            )}
+          </Combobox.Options>
+        </InfiniteScroll>
       </Combobox>
     </>
   );

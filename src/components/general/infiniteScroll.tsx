@@ -8,7 +8,7 @@ import {
 } from "react";
 
 type Props = {
-  onEndReached: () => void | Promise<void>;
+  onEndReached?: () => void | Promise<void>;
 } & ComponentPropsWithRef<"div">;
 export const InfiniteScroll: FC<Props> = forwardRef(
   ({ onEndReached, children, ...props }, ref) => {

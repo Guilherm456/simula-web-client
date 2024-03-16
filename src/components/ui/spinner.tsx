@@ -3,6 +3,7 @@ import { ComponentProps, FC } from "react";
 import { cn } from "@utils/utils";
 
 type Props = ComponentProps<"svg">;
+
 export const Spinner: FC<Props> = ({ className = "w-10 h-10", ...props }) => {
   return (
     <svg
