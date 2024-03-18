@@ -18,3 +18,8 @@ export enum StatusEnum {
   "FINISHED" = "FINISHED",
   "ERROR" = "ERROR",
 }
+
+export interface SimulacaoCreate {
+  base: Base;
+  name: string;
+}

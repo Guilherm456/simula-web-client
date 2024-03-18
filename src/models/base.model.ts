@@ -1,14 +1,13 @@
-import { Structure } from ".";
+import { ParameterDB, Structure, User } from ".";
 
 export interface Base {
   name: string;
-  user: string;
-  type: {};
+  description?: string;
+  user: User | string;
+  type: Structure | string;
   createdAt: Date;
   updatedAt: Date;
-  parameters: {
-    [key: string]: string;
-  };
+  parameters: ParameterDB;
   _id: string;
 }
 

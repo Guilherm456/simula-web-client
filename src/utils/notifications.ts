@@ -1,13 +1,15 @@
+"use client";
 import { ReactNode } from "react";
+import { toast } from "sonner";
 
 export const successNotification = (message: string | ReactNode) => {
-  console.debug(message);
+  toast.success(message);
 };
 
 export const errorNotification = (message: string | ReactNode) => {
-  console.debug(message);
+  toast.error(message);
 };
 
 export const infoNotification = (message: string | ReactNode) => {
-  console.info(message);
+  toast.info(message);
 };

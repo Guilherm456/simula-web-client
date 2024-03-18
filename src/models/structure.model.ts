@@ -1,3 +1,16 @@
+export interface StructureParametersValue {
+  name: string;
+  type: "number" | "string" | "mixed";
+}
+
+export interface StructureParameters {
+  name: string;
+
+  values: StructureParametersValue[];
+
+  subParameters: Exclude<StructureParameters, "subParameters">[];
+}
+
 export interface Structure {
   _id: string;
 
@@ -11,9 +24,8 @@ export interface Structure {
   /**
    * Parâmetros que a simulação necessita
    */
-  parameters: {
-    [key: string]: any;
-  };
+  parameters: StructureParameters[];
+
   /**
    * Nome da pasta onde está os arquivos de entrada da simulação
    * @type {string}
