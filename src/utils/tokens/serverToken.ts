@@ -2,4 +2,5 @@
 
 import { cookies } from "next/headers";
 
-export const getTokenServerSide = () => cookies().get("access_token")?.value;
+export const getTokenServerSide = async () =>
+  cookies().get("access_token")?.value;
