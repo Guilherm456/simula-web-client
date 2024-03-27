@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { ButtonCreateBase } from "./components/buttonCreateBase";
 import { ListBases } from "./components/listBases";
 import { SearchInput } from "./components/searchInput";
@@ -11,7 +12,11 @@ export default function Page() {
           <h1 className="text-5xl font-bold text-gray-12">Bases</h1>
           <ButtonCreateBase />
         </div>
-        <SearchInput placeholder="Buscar bases por nome" />
+        <Suspense
+          fallback={<div className="h-14 w-full rounded-md bg-gray-4" />}
+        >
+          <SearchInput placeholder="Buscar bases por nome" />
+        </Suspense>
       </div>
 
       <ListBases />
