@@ -2,13 +2,15 @@
 import { InfiniteScroll } from "@components/general/infiniteScroll";
 import { getBases } from "@services/base";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useAppSelector } from "@utils/hooks";
 import dayjs from "dayjs";
 import { BuildingIcon, CalendarClock, CalendarPlus } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export const ListBases = () => {
-  const search = useAppSelector((state) => state.search.search);
+  const queries = useSearchParams();
+
+  const search = (queries.get("search") as string) ?? "";
 
   const {
     data: base,
@@ -39,28 +41,29 @@ export const ListBases = () => {
             <Link
               key={base._id}
               className="gap-1 rounded-md border border-solid border-gray-4 p-4"
-              href={`/${base._id}`}
+              href={`/base/${base._id}`}
               aria-label={`Visualizar base ${base.name}`}
+              id={`base-${base._id}`}
             >
               <span className="line-clamp-1 text-xl font-semibold text-gray-12">
                 {base.name}
               </span>
               <div className="flex items-center gap-2 pb-4">
-                <BuildingIcon className="h-4 w-4" />
+                <BuildingIcon size={16} />
                 <span className="line-clamp-1 text-sm text-gray-11">
                   {base.type?.name ?? "-"}
                 </span>
               </div>
               <div className="grid gap-1">
                 <div className="flex items-center gap-2">
-                  <CalendarPlus className="h-4 w-4" />
+                  <CalendarPlus size={16} />
                   <span className="text-sm text-gray-11">
                     {dayjs(base.createdAt).format("DD/MM/YYYY")}
                   </span>
                 </div>
                 {base.updatedAt && (
                   <div className="flex items-center gap-2">
-                    <CalendarClock className="h-4 w-4" />
+                    <CalendarClock size={16} />
                     <span className="text-sm text-gray-11">
                       {dayjs(base.updatedAt).format("DD/MM/YYYY")}
                     </span>

@@ -1,21 +1,37 @@
 "use client";
-import { Textfield } from "@components/ui";
-import { useAppDispatch } from "@utils/hooks";
-import { setSearch } from "@utils/store";
+import { Textfield } from "@components/ui/";
 import debounce from "lodash/debounce";
 import { Search } from "lucide-react";
-import { useCallback } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { FC, useCallback } from "react";
 
-export const SearchInput = () => {
-  const dispatch = useAppDispatch();
+type Props = {
+  placeholder: string;
+};
+
+export const SearchInput: FC<Props> = ({
+  placeholder = "Pesquisar pelo nome",
+}) => {
+  const router = useRouter();
+
+  const pathName = usePathname();
+
+  const queries = useSearchParams();
+
   const handleSearch = useCallback(
-    debounce((value: string) => dispatch(setSearch(value)), 500),
-    [],
+    debounce((value: string) => {
+      const query = new URLSearchParams(queries);
+      if (value) query.set("search", value);
+      else query.delete("search");
+      router.replace(`${pathName}?${query.toString()}`);
+    }, 500),
+    [queries],
   );
 
   return (
     <Textfield
-      placeholder="Pesquisar pelo nome"
+      placeholder={placeholder}
+      defaultValue={(queries.get("search") as string) ?? ""}
       onChange={(e) => handleSearch(e.target.value)}
       rightIcon={
         <div className="rounded-full bg-blue-500 p-2">

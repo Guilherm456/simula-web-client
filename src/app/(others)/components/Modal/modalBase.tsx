@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@components/ui/dialog";
@@ -16,7 +17,11 @@ import {
 import { baseSchema } from "@schema/base.schema";
 import { createBase, createBaseWithFiles } from "@services/base";
 import { getAllStructures } from "@services/structures";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { errorNotification, infoNotification } from "@utils/notifications";
 import { useRouter } from "next/navigation";
 import { FC, useCallback, useEffect, useState } from "react";
@@ -48,7 +53,15 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
 
   const queryClient = useQueryClient();
 
-  const { data: structures, isLoading } = useQuery({
+  const {
+    data: structures,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _, lastPageParam) =>
+      lastPage.hasNext ? lastPageParam + 1 : undefined,
     queryKey: ["structures", query],
     queryFn: async () =>
       await getAllStructures({
@@ -66,7 +79,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
         exact: false,
       });
 
-      router.push(`/${data._id}`);
+      router.push(`/base/${data._id}`);
     },
   });
 
@@ -80,7 +93,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
         queryKey: ["bases"],
         exact: false,
       });
-      router.push(`/${data._id}`);
+      router.push(`/base/${data._id}`);
     },
   });
 
@@ -158,55 +171,64 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
             </DialogDescription>
           </DialogHeader>
           <FormProvider {...form}>
-            <div className="flex flex-col gap-2">
-              <Textfield
-                label="Nome da base"
-                placeholder="Insira aqui o nome da base"
-                {...register("name")}
-                error={!!errors.name}
-                errorMessage={errors.name?.message as string}
-              />
-              <Autocomplete
-                label="Estrutura"
-                value={watch("type")}
-                onChange={(value) => setValue("type", value)}
-                placeholder="Selecione uma estrutura para a base"
-                onSearch={(value) => setQuery(value)}
-                options={structures?.content ?? []}
-                getOptionLabel={(option) => option.name}
-                inputProps={{
-                  error: !!errors.type,
-                  errorMessage: errors.type?.message as string,
-                }}
-              />
-            </div>
+            <form
+              id="create-base-form"
+              onSubmit={handleSubmit(onSubmit as any)}
+            >
+              <div className="flex flex-col gap-2">
+                <Textfield
+                  label="Nome da base"
+                  placeholder="Insira aqui o nome da base"
+                  {...register("name")}
+                  error={!!errors.name}
+                  errorMessage={errors.name?.message as string}
+                />
+                <Autocomplete
+                  label="Estrutura"
+                  value={watch("type")}
+                  onChange={(value) => setValue("type", value)}
+                  placeholder="Selecione uma estrutura para a base"
+                  onSearch={(value) => setQuery(value)}
+                  options={structures?.pages?.flatMap((page) => page.content)}
+                  getOptionLabel={(option) => option.name}
+                  inputProps={{
+                    error: !!errors.type,
+                    errorMessage: errors.type?.message as string,
+                  }}
+                  onMore={() => {
+                    if (hasNextPage && !isLoading) fetchNextPage();
+                  }}
+                />
+              </div>
 
-            <ParametersExibition
-              onSendFiles={onSendFiles}
-              parameters={(watch("type") as Structure)?.parameters}
-              onCreateBase={handleSubmit((data) => {
-                delete data.files;
-                mutate(data as CreateBaseDTO);
-              })}
-            />
-
-            <div className="sticky bottom-0 left-0 flex gap-2 bg-white">
-              <Button
-                className="w-full bg-gray-3 text-gray-12"
-                disabled={isPending || pendingUpload}
-                onClick={handleClose}
-              >
-                Cancelar
-              </Button>
-              <Button
-                className="w-full"
-                onClick={handleSubmit(onSubmit as any)}
-                loading={isPending || pendingUpload}
-              >
-                Criar
-              </Button>
-            </div>
+              <ParametersExibition
+                onSendFiles={onSendFiles}
+                parameters={(watch("type") as Structure)?.parameters}
+                onCreateBase={handleSubmit((data) => {
+                  delete data.files;
+                  mutate(data as CreateBaseDTO);
+                })}
+              />
+            </form>
           </FormProvider>
+          <DialogFooter>
+            <Button
+              className="w-full bg-gray-3 text-gray-12"
+              disabled={isPending || pendingUpload}
+              onClick={handleClose}
+            >
+              Cancelar
+            </Button>
+            <Button
+              className="w-full"
+              type="submit"
+              form="create-base-form"
+              // onClick={handleSubmit(onSubmit as any)}
+              loading={isPending || pendingUpload}
+            >
+              Criar
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
