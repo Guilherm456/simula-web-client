@@ -59,15 +59,12 @@ const Drawer = () => {
   const renderDrawer = () => (
     <>
       <Button
-        className="m-4 h-min w-min self-end rounded-full bg-gray-300 p-2 text-gray-12 md:m-6"
+        className="m-4 h-min w-min self-end rounded-full bg-gray-300 p-2 text-gray-900 md:m-6"
         onClick={() => setOpen(!open)}
         id="menu-button"
+        aria-label={open ? "Fechar menu" : "Abrir menu"}
       >
-        {open ? (
-          <PanelLeftClose className="h-5 w-5" aria-label="Fechar menu" />
-        ) : (
-          <PanelLeftOpen className="h-5 w-5" aria-label="Abrir menu" />
-        )}
+        {open ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
       </Button>
 
       <div className="hidden group-aria-expanded:block md:block">
