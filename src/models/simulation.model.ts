@@ -1,10 +1,12 @@
 import { Base, Structure } from ".";
+import { Output } from "./output.model";
 
 export interface Simulacao {
   name: string;
   base: Base | string;
   status: StatusEnum;
   structure: Structure | string;
+  output?: Output | string;
   user: string;
   parameters: object;
   createdAt: string;
@@ -23,3 +25,5 @@ export interface SimulacaoCreate {
   base: Base;
   name: string;
 }
+
+export type SimulacaoUpdate = Pick<SimulacaoCreate, "name">;

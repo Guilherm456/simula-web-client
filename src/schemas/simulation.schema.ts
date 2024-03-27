@@ -10,3 +10,7 @@ export const simulationSchema = yup.object().shape({
     .required()
     .label("Base"),
 });
+
+export const simulationUpdateSchema = yup.object().shape({
+  name: yup.string().required().label("Nome").max(50),
+});
