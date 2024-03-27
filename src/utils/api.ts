@@ -23,7 +23,7 @@ const fetchWithAuth = {
 
   async post<T>(
     url: string,
-    body: any,
+    body?: any,
     options: FetchOptions = {},
   ): Promise<T> {
     // Verifica se o corpo é FormData ou não
@@ -59,7 +59,9 @@ const fetchWithAuth = {
     const url = `${process.env.NEXT_PUBLIC_API}${endpoint}${queryString}`;
 
     // Obter o token de acesso do cookie
-    const token = isClientSide() ? getTokenClientSide() : getTokenServerSide();
+    const token = isClientSide()
+      ? getTokenClientSide()
+      : await getTokenServerSide();
 
     // Preparar os cabeçalhos básicos
     const headers: RequestInit["headers"] = token
