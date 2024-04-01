@@ -7,6 +7,7 @@ import { Building, CalendarClock, CalendarPlus } from "lucide-react";
 import { notFound } from "next/navigation";
 import { HeaderPage } from "./components/headerPage";
 import { OutputCard } from "./components/outputCard";
+import { Tabs } from "./components/tabs";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const simulation = await getSimulation(params.slug);
@@ -18,6 +19,21 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <HeaderPage simulation={simulation} />
+      <Tabs
+        tabs={[
+          {
+            url: `/simulacoes/${simulation._id}`,
+            label: "Informações",
+          },
+          {
+            url: `/simulacoes/${simulation._id}/visualizacao`,
+            label: "Visualização",
+            disabled: !simulation.output,
+          },
+        ]}
+        actualTab={`/simulacoes/${simulation._id}`}
+      />
+
       <Card title="Informações">
         <div className="flex items-center gap-2">
           <Building size={20} className="text-gray-11" />
@@ -47,6 +63,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </span>
         </div>
       </Card>
+
       <div className="flex flex-col gap-2 rounded-2xl border border-solid border-gray-4 p-4">
         <span className="text-2xl font-bold text-gray-12">Entradas</span>
         <ParametersTable

@@ -1,77 +1,45 @@
-"use client";
-
 import { getSimulations } from "@services/simulation";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { simulationStatus } from "@utils/simulation";
-import { cn } from "@utils/utils";
-import dayjs from "dayjs";
-import { CalendarClock, CalendarPlus, Tag } from "lucide-react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { Metadata } from "next";
+import { Suspense } from "react";
+import { SearchInput } from "../../components/searchInput";
+import { ButtonCreateSimulation } from "./components/buttonCreateSimulation";
+import { ListSimulations } from "./components/listSimulation";
+import { SelectStatus } from "./components/selectStatus";
 
-export default function Page() {
-  const query = useSearchParams();
-
-  const search = (query.get("search") as string) ?? "";
-  const status = (query.get("status") as string) ?? "";
-
-  const { hasNextPage, data, isPending, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["simulations", search, status],
-    initialPageParam: 0,
-    queryFn: async ({ pageParam = 0 }) =>
-      await getSimulations({
-        offset: pageParam,
-        name: search,
-        status: status,
-      }),
-    getNextPageParam: (lastPage, _, lastPageParam) =>
-      lastPage.hasNext ? lastPageParam + 1 : undefined,
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { search: string; status: string };
+}) {
+  const initialList = await getSimulations({
+    nome: (searchParams["search"] as string) ?? undefined,
+    status: (searchParams["status"] as string) ?? undefined,
   });
+
   return (
-    <>
-      {data?.pages?.map(
-        (page) =>
-          page?.content?.map((simulation) => (
-            <Link
-              key={simulation._id}
-              className="gap-1 rounded-md border border-solid border-gray-4 p-4"
-              href={`/simulacoes/${simulation._id}`}
-              aria-label={`Visualizar base ${simulation.name}`}
-              id={`base-${simulation._id}`}
-            >
-              <span className="line-clamp-1 text-xl font-semibold text-gray-12">
-                {simulation.name}
-              </span>
-              <div className="flex items-center gap-2 pb-4">
-                <Tag className="h-4 w-4" />
-                <span
-                  className={cn(
-                    "line-clamp-1 text-sm",
-                    simulationStatus[simulation.status].color,
-                  )}
-                >
-                  {simulationStatus[simulation.status].label}
-                </span>
-              </div>
-              <div className="grid gap-1">
-                <div className="flex items-center gap-2">
-                  <CalendarPlus className="h-4 w-4" />
-                  <span className="text-sm text-gray-11">
-                    {dayjs(simulation.createdAt).format("DD/MM/YYYY")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4" />
-                  <span className="text-sm text-gray-11">
-                    {simulation.updatedAt
-                      ? dayjs(simulation.updatedAt).format("DD/MM/YYYY")
-                      : "Não houve atualização"}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          )),
-      )}
-    </>
+    <div className="m-6 flex flex-col gap-5">
+      <div className="sticky left-0 top-[4.25rem] z-10 flex flex-col gap-5 bg-white py-6 md:top-0">
+        <div className="flex items-center justify-between">
+          <h1 className="text-5xl font-bold text-gray-12">Simulações</h1>
+          <ButtonCreateSimulation />
+        </div>
+        <Suspense
+          fallback={<div className="h-14 w-full rounded-md bg-gray-4" />}
+        >
+          <div className="flex items-center gap-2">
+            <SearchInput placeholder="Buscar simulações por nome" />
+            <SelectStatus />
+          </div>
+        </Suspense>
+      </div>
+
+      <ListSimulations listInitial={initialList} />
+    </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Simulações - SIMULA",
+  description:
+    "Lista das simulações disponíveis no sistema de simulações de doenças",
+};

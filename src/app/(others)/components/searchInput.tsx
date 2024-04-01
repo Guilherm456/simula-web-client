@@ -33,6 +33,7 @@ export const SearchInput: FC<Props> = ({
       placeholder={placeholder}
       defaultValue={(queries.get("search") as string) ?? ""}
       onChange={(e) => handleSearch(e.target.value)}
+      className="h-13"
       rightIcon={
         <div className="rounded-full bg-blue-500 p-2">
           <Search className="h-5 w-5 text-gray-1" />
