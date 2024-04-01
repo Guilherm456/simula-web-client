@@ -50,7 +50,7 @@ export const Stepper: FC<Props> = ({ value, onChange, steps }) => {
               >
                 {step.icon}
               </span>
-              <span className="mt-2 hidden text-sm font-medium md:block">
+              <span className="mt-2 hidden truncate text-sm font-medium md:block">
                 {step.label}
               </span>
             </li>

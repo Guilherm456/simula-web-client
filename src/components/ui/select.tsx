@@ -31,7 +31,10 @@ const Select = React.forwardRef<
   ) => (
     <div className={cn("flex flex-col gap-2")}>
       {label && (
-        <label className={cn("text-sm font-medium text-gray-700")} htmlFor={id}>
+        <label
+          className={cn("text-body font-medium text-gray-12")}
+          htmlFor={id}
+        >
           {label}
         </label>
       )}
@@ -39,7 +42,7 @@ const Select = React.forwardRef<
         <SelectPrimitive.Trigger
           className={cn(
             error
-              ? "border border-solid border-[#D92D20]"
+              ? "border border-solid border-red-600"
               : `border border-solid border-gray-4`,
             "px-3 py-2",
             "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",

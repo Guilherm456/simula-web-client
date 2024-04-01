@@ -40,7 +40,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div
           className={cn(
             error
-              ? "border border-solid border-[#D92D20]"
+              ? "border border-solid border-red-600"
               : "border border-solid border-gray-4",
             "relative",
             "rounded-md",
@@ -59,7 +59,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           />
         </div>
         {error && errorMessage && (
-          <div className="text-base text-[#D92D20]">{errorMessage}</div>
+          <div className="text-base text-red-600">{errorMessage}</div>
         )}
       </label>
     );
