@@ -39,10 +39,10 @@ export const GeneralData = () => {
       <Textfield
         label="Pasta de saída dos resultados"
         placeholder="Digite o nome da pasta de saída dos resultados"
-        {...register("outputsFolder")}
-        error={!!errors.outputsFolder}
-        errorMessage={errors.outputsFolder?.message as string}
-        id="structure-outputsFolder-input"
+        {...register("resultsFolder")}
+        error={!!errors.resultsFolder}
+        errorMessage={errors.resultsFolder?.message as string}
+        id="structure-resultsFolder-input"
       />
 
       <Textfield

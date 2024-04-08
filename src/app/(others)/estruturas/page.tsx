@@ -5,7 +5,11 @@ import { SearchInput } from "../components/searchInput";
 import { ButtonCreateStructure } from "./components/buttonCreateStructure";
 import { ListStructure } from "./components/listStructure";
 
-export default async function Page({ searchParams }) {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { search: string };
+}) {
   const list = await getAllStructures({
     name: searchParams["search"] as string,
   });
@@ -24,7 +28,6 @@ export default async function Page({ searchParams }) {
       </div>
 
       <ListStructure listInitial={list} />
-      {/* <ListBases /> */}
     </div>
   );
 }

@@ -19,7 +19,7 @@ export const AgentsCard = () => {
   });
 
   return (
-    <div className="flex flex-col gap-2 border-t border-solid border-gray-4 ">
+    <div className="flex flex-col gap-2 ">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span className="text-xl text-gray-12">Agentes</span>
@@ -47,54 +47,60 @@ export const AgentsCard = () => {
       </div>
       <div className="grid gap-1 ">
         {fields.map((agent, index) => (
-          <div key={agent.id} className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xl text-gray-12">Agente {index + 1}</span>
-              <Button
-                className="w-min bg-red-500 text-white"
-                onClick={() => remove(index)}
-              >
-                <Trash size={16} />
-                Remover
-              </Button>
-            </div>
-            <Textfield
-              label="Nome"
-              {...register(`agents.${index}.name`)}
-              className="input"
-            />
-            <Textfield
-              label="Label"
-              {...register(`agents.${index}.label`)}
-              className="input"
-            />
-            <Textfield
-              label="Cor"
-              type="color"
-              {...register(`agents.${index}.color`)}
-              className="input"
-            />
+          <div
+            key={agent.id}
+            className="border-t border-solid border-gray-6 py-4 "
+          >
+            <div key={agent.id} className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xl font-semibold text-gray-12">
+                  Agente {index + 1}
+                </span>
+                <Button
+                  className="w-min border border-solid border-red-500 bg-transparent text-red-500"
+                  onClick={() => remove(index)}
+                >
+                  <Trash size={16} />
+                </Button>
+              </div>
+              <Textfield
+                label="Nome"
+                {...register(`agents.${index}.name`)}
+                className="input"
+              />
+              <Textfield
+                label="Label"
+                {...register(`agents.${index}.label`)}
+                className="input"
+              />
+              <Textfield
+                label="Cor"
+                type="color"
+                {...register(`agents.${index}.color`)}
+                className="input"
+              />
 
-            <Controller
-              name={`agents.${index}.onData`}
-              control={control}
-              render={({ field }) => (
-                <AceEditor
-                  mode="java"
-                  theme="github_dark"
-                  onChange={(value) => {
-                    field.onChange(value);
-                  }}
-                  value={field.value}
-                  style={{ width: "100%", height: 200 }}
-                  name={`agents.${index}.onData`}
-                  enableLiveAutocompletion
-                  setOptions={{
-                    useWorker: false,
-                  }}
-                />
-              )}
-            />
+              <Controller
+                name={`agents.${index}.onData`}
+                control={control}
+                render={({ field }) => (
+                  <AceEditor
+                    mode="java"
+                    theme="github_dark"
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    value={field.value}
+                    style={{ width: "100%", height: 200 }}
+                    name={`agents.${index}.onData`}
+                    enableLiveAutocompletion
+                    setOptions={{
+                      useWorker: false,
+                    }}
+                  />
+                )}
+              />
+            </div>
           </div>
         ))}
       </div>
