@@ -61,8 +61,6 @@ export const ParametersTable: FC<Props> = ({
     }
   }, [activeSubTab, activeTab, parameterId, structureParameters]);
 
-  console.debug("columns", columns, parameter?.content);
-
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
@@ -79,10 +77,6 @@ export const ParametersTable: FC<Props> = ({
         path: "/edit-parameters",
       }),
     );
-
-    socket?.on("connect", () => {
-      console.log("conectado");
-    });
   });
 
   return (

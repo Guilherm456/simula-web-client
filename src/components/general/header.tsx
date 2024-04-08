@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 interface Props {
-  user: string;
+  user?: string;
   name: string;
 
   editable?: boolean;
@@ -72,48 +72,48 @@ export const Header: FC<Props> = ({
           </span>
         )}
       </div>
-      {user === userActual?._id && editable ? (
-        <div className="flex gap-2">
-          {onDelete && (
-            <Button
-              className="h-11 w-11 justify-center rounded-full border border-solid border-gray-4 bg-transparent text-black"
-              onClick={onDelete}
-              id="button-delete"
-              aria-label="Deletar"
-            >
-              <Trash size={20} />
-            </Button>
-          )}
-          {urlEdit && (
-            <Link
-              href={urlEdit}
-              aria-label="Ir para página de edição"
-              id="button-edit"
-            >
+      <div className="flex gap-2">
+        {user === userActual?._id && editable && (
+          <>
+            {onDelete && (
               <Button
-                aria-label="Ir para página de edição"
-                className="h-11 w-11 justify-center rounded-full border border-solid border-gray-4 bg-transparent text-xl text-black"
+                className="h-11 w-11 justify-center rounded-full border border-solid border-gray-4 bg-transparent text-black"
+                onClick={onDelete}
+                id="button-delete"
+                aria-label="Deletar"
               >
-                <Edit />
+                <Trash size={20} />
               </Button>
-            </Link>
-          )}
+            )}
+            {urlEdit && (
+              <Link
+                href={urlEdit}
+                aria-label="Ir para página de edição"
+                id="button-edit"
+              >
+                <Button
+                  aria-label="Ir para página de edição"
+                  className="h-11 w-11 justify-center rounded-full border border-solid border-gray-4 bg-transparent text-xl text-black"
+                >
+                  <Edit />
+                </Button>
+              </Link>
+            )}
+          </>
+        )}
 
-          {customButton?.map((button, index) => (
-            <Button
-              key={index}
-              className="h-11 w-11 justify-center rounded-full border border-solid border-gray-4 bg-transparent text-black"
-              onClick={button.onClick}
-              aria-label={button.ariaLabel}
-              id={button.id}
-            >
-              {button.icon}
-            </Button>
-          ))}
-        </div>
-      ) : (
-        <div />
-      )}
+        {customButton?.map((button, index) => (
+          <Button
+            key={index}
+            className="h-11 w-11 justify-center rounded-full border border-solid border-gray-4 bg-transparent text-black"
+            onClick={button.onClick}
+            aria-label={button.ariaLabel}
+            id={button.id}
+          >
+            {button.icon}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };

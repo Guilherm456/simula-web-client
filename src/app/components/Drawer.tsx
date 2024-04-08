@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@components/ui";
 import { Roles } from "@models/user.model";
 import { logout } from "@services/login";
@@ -32,11 +31,6 @@ const options = [
     icon: <BookImage className="h-6 w-6" />,
   },
   {
-    value: "/logs",
-    label: "Relatórios do sistema",
-    icon: <ScrollText className="h-6 w-6" />,
-  },
-  {
     value: "/estruturas",
     label: "Estruturas",
     role: "admin",
@@ -48,9 +42,13 @@ const options = [
     role: "admin",
     icon: <UsersRound className="h-6 w-6" />,
   },
+  {
+    value: "/logs",
+    label: "Relatórios do sistema",
+    icon: <ScrollText className="h-6 w-6" />,
+  },
 ];
 
-const classString = "group-aria-expanded:flex hidden";
 const Drawer = () => {
   const [open, setOpen] = useState(false);
   const user = useAppSelector((state) => state.login.user);
@@ -63,11 +61,13 @@ const Drawer = () => {
         onClick={() => setOpen(!open)}
         id="menu-button"
         aria-label={open ? "Fechar menu" : "Abrir menu"}
+        aria-controls="drawer-menu"
+        aria-expanded={open}
       >
         {open ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
       </Button>
 
-      <div className="hidden group-aria-expanded:block md:block">
+      <div id="drawer-menu" role="menu" aria-hidden={!open}>
         {options
           .filter(
             (option) =>
@@ -83,14 +83,18 @@ const Drawer = () => {
                 "flex w-full items-center gap-4 px-4 py-2 text-gray-900 no-underline hover:bg-gray-300",
                 "aria-selected:text-primary",
               )}
-              role="menuitem"
               aria-selected={pathName === option.value}
               aria-label={option.label}
               id={`menu-item-${option.value}`}
               onClick={() => setOpen(false)}
             >
               {option.icon}
-              <span className={cn("w-full truncate text-base", classString)}>
+              <span
+                className={cn(
+                  "w-full truncate text-base",
+                  open ? "block" : "hidden",
+                )}
+              >
                 {option.label}
               </span>
             </Link>
@@ -102,17 +106,19 @@ const Drawer = () => {
           <div className="rounded-full bg-gray-300 p-2 text-gray-12">
             <CircleUser className="h-5 w-5" />
           </div>
-          <span className={cn("hidden w-full text-base", classString)}>
+          <span
+            className={cn("hidden w-full text-base", open ? "block" : "hidden")}
+          >
             {user?.name ?? "-"}
           </span>
         </div>
         <Link href="/login" className="hidden md:block" aria-label="Sair">
           <Button
-            className={cn("bg-red-500", classString)}
+            className={cn("bg-red-500 text-white", open ? "block" : "hidden")}
             onClick={() => logout()}
           >
             <LogOut className="h-5 w-5" />
-            <span className="w-full text-base">Sair</span>
+            Sair
           </Button>
         </Link>
       </div>
@@ -124,15 +130,12 @@ const Drawer = () => {
       <aside
         className={cn(
           "group flex justify-between bg-gray-200 md:min-h-screen",
-          "w-min aria-expanded:md:w-64",
+          open ? "md:w-1/4" : "md:w-min",
           "md:flex-col",
-          "w-full md:w-min md:aria-expanded:w-64",
           "transition-all duration-300 ease-out",
           "fixed left-0 top-0 z-50 md:relative",
         )}
-        aria-expanded={open}
-        aria-label="Menu"
-        role="menu"
+        aria-label="Menu lateral"
       >
         {renderDrawer()}
       </aside>
@@ -141,14 +144,15 @@ const Drawer = () => {
         <div
           className="fixed inset-0 z-[99] h-full w-full bg-black opacity-50 md:hidden"
           onClick={() => setOpen(false)}
+          aria-hidden="true"
         />
       )}
 
       {open && (
         <div
           className="group fixed inset-0 z-[100] flex h-full w-3/4 flex-col justify-between bg-gray-200 p-4 md:hidden"
+          id="drawer-menu"
           aria-expanded={open}
-          role="menu"
         >
           {renderDrawer()}
         </div>
