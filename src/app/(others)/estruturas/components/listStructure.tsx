@@ -16,7 +16,7 @@ interface Props {
 
 export const ListStructure: FC<Props> = ({ listInitial }) => {
   const queries = useSearchParams();
-  const search = queries.get("search") ?? "";
+  const search = queries.get("search") ?? undefined;
 
   const { data, hasNextPage, fetchNextPage, isFetching } = useInfiniteQuery({
     initialPageParam: 0,
