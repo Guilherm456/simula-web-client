@@ -2,8 +2,7 @@
 
 import { Log } from "@models/logs.model";
 import dayjs from "dayjs";
-import { For } from "million/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 export default function Page() {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -29,13 +28,9 @@ export default function Page() {
     };
   }, []);
 
-  return logs.length === 0 ? (
-    <div className="w-full text-center text-gray-4">
-      Nenhum registro ou carregando...
-    </div>
-  ) : (
-    <For each={logs} key={(log: Log) => log.id}>
-      {(log) => (
+  const logsList = useMemo(
+    () =>
+      logs?.map((log) => (
         <div key={log.id} className="flex w-max gap-2">
           <div className="text-gray-4">
             ({dayjs(log.date).format("DD/MM/YYYY HH:mm:ss")})
@@ -53,7 +48,15 @@ export default function Page() {
           </div>
           <div className=" text-gray-4">{log.message}</div>
         </div>
-      )}
-    </For>
+      )),
+    [logs],
+  );
+
+  return logs.length === 0 ? (
+    <div className="w-full text-center text-gray-4">
+      Nenhum registro ou carregando...
+    </div>
+  ) : (
+    logsList
   );
 }

@@ -1,20 +1,27 @@
 "use client";
 import { InfiniteScroll } from "@components/general/infiniteScroll";
+import { Base } from "@models/index";
+import { Pagination } from "@models/utils.model";
 import { getBases } from "@services/base";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { BuildingIcon, CalendarClock, CalendarPlus } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { FC } from "react";
 
-export const ListBases = () => {
+interface Props {
+  listInitial: Pagination<Base>;
+}
+
+export const ListBases: FC<Props> = ({ listInitial }) => {
   const queries = useSearchParams();
 
-  const search = (queries.get("search") as string) ?? "";
+  const search = queries.get("search") as string;
 
   const {
     data: base,
-    isPending,
+    isFetching,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
@@ -27,11 +34,16 @@ export const ListBases = () => {
       }),
     getNextPageParam: (lastPage, _, lastPageParam) =>
       lastPage.hasNext ? lastPageParam + 1 : undefined,
+    initialData: {
+      pages: [listInitial],
+      pageParams: [0],
+    },
   });
+
   return (
     <InfiniteScroll
       onEndReached={() => {
-        if (hasNextPage && !isPending) fetchNextPage();
+        if (hasNextPage && !isFetching) fetchNextPage();
       }}
       className="flex flex-col gap-4"
     >
@@ -74,7 +86,7 @@ export const ListBases = () => {
           )),
       )}
 
-      {isPending &&
+      {isFetching &&
         Array.from({ length: 5 }).map((_, index) => (
           <div
             key={index}
