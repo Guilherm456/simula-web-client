@@ -20,8 +20,8 @@ interface Props {
 export const ListSimulations: FC<Props> = ({ listInitial }) => {
   const query = useSearchParams();
 
-  const search = (query.get("search") as string) ?? "";
-  const status = (query.get("status") as string) ?? "";
+  const search = (query.get("search") as string) ?? undefined;
+  const status = (query.get("status") as string) ?? undefined;
 
   const { hasNextPage, data, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: ["simulations", search, status],
@@ -39,6 +39,7 @@ export const ListSimulations: FC<Props> = ({ listInitial }) => {
       pageParams: [0],
     },
   });
+
   return (
     <InfiniteScroll
       onEndReached={() => {
