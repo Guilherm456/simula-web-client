@@ -68,6 +68,7 @@ export default function Login() {
             {...register("email", {
               required: true,
             })}
+            id="email-input"
           />
           <Textfield
             label="Senha"
@@ -79,8 +80,9 @@ export default function Login() {
             {...register("password", {
               required: true,
             })}
+            id="password-input"
           />
-          <Button type="submit">
+          <Button type="submit" id="login-button">
             {isPending && <Spinner className="h-4 w-4" />}
             Entrar
           </Button>

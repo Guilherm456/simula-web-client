@@ -38,6 +38,10 @@ export const HeaderPage: FC<Props> = ({ simulation }) => {
   const { mutate: execute } = useMutation({
     mutationFn: async () => executeSimulation(simulation._id!),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["simulations"],
+        exact: false,
+      });
       infoNotification("Simulação executada com sucesso");
       router.push("/simulacoes?status=RUNNING");
     },

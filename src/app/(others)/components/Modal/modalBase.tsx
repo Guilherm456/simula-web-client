@@ -182,6 +182,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
                   {...register("name")}
                   error={!!errors.name}
                   errorMessage={errors.name?.message as string}
+                  id="name-base-input"
                 />
                 <Autocomplete
                   label="Estrutura"
@@ -198,6 +199,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
                   onMore={() => {
                     if (hasNextPage && !isLoading) fetchNextPage();
                   }}
+                  id="structure-base-autocomplete"
                 />
               </div>
 
@@ -216,6 +218,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
               className="w-full bg-gray-3 text-gray-12"
               disabled={isPending || pendingUpload}
               onClick={handleClose}
+              id="cancel-create-base-button"
             >
               Cancelar
             </Button>
@@ -225,6 +228,7 @@ export const ModalBase: FC<Props> = ({ open, onClose }) => {
               form="create-base-form"
               // onClick={handleSubmit(onSubmit as any)}
               loading={isPending || pendingUpload}
+              id="create-base-button"
             >
               Criar
             </Button>

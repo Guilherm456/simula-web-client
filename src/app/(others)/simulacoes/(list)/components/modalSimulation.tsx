@@ -94,7 +94,7 @@ export const ModalSimulation: FC<Props> = ({ onClose, open }) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Criar simulação</DialogTitle>
+          <DialogTitle id="title-simulation-modal">Criar simulação</DialogTitle>
           <DialogDescription>
             Preencha os campos abaixo para criar uma nova simulação
           </DialogDescription>

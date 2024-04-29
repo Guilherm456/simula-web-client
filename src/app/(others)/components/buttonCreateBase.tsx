@@ -14,7 +14,12 @@ export const ButtonCreateBase = () => {
   if (user?.role === "guest") return null;
   return (
     <>
-      <Button className="w-max gap-2" onClick={() => setOpen(true)}>
+      <Button
+        className="w-max gap-2"
+        onClick={() => setOpen(true)}
+        id="create-new-base-button"
+        aria-label="Criar base"
+      >
         <Plus className="h-5 w-5 " />
         <span className="hidden md:block">Criar base</span>
       </Button>

@@ -37,7 +37,8 @@ export const ParametersExibition: FC<Props> = ({
                   <UploadFile
                     onUpload={(files) => onSendFiles(files, mainIndex)}
                     key={param.name}
-                    className="w-full cursor-pointer rounded-md border border-solid border-gray-4 p-2 "
+                    className="w-full cursor-pointer rounded-md border border-solid border-gray-4 p-2"
+                    id={`upload-file-${mainIndex}`}
                   >
                     <div className="flex items-center justify-center gap-2">
                       <span
@@ -97,6 +98,7 @@ export const ParametersExibition: FC<Props> = ({
           <span
             className="w-full cursor-pointer text-center font-semibold text-cyan-800 underline"
             onClick={onCreateBase}
+            id="create-base-manually-button"
           >
             Criar dados manualmente
           </span>
