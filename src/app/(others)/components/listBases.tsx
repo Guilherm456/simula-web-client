@@ -40,6 +40,9 @@ export const ListBases: FC<Props> = ({ listInitial }) => {
     },
   });
 
+  if (base?.pages?.[0]?.totalElements === 0 && !isFetching)
+    return <div>Nenhuma base encontrada</div>;
+
   return (
     <InfiniteScroll
       onEndReached={() => {
@@ -47,43 +50,42 @@ export const ListBases: FC<Props> = ({ listInitial }) => {
       }}
       className="flex flex-col gap-4"
     >
-      {base?.pages?.map(
-        (page) =>
-          page?.content?.map((base) => (
-            <Link
-              key={base._id}
-              className="gap-1 rounded-md border border-solid border-gray-4 p-4"
-              href={`/base/${base._id}`}
-              aria-label={`Visualizar base ${base.name}`}
-              id={`base-${base._id}`}
-            >
-              <span className="line-clamp-1 text-xl font-semibold text-gray-12">
-                {base.name}
+      {base?.pages?.map((page) =>
+        page?.content?.map((base) => (
+          <Link
+            key={base._id}
+            className="gap-1 rounded-md border border-solid border-gray-4 p-4"
+            href={`/base/${base._id}`}
+            aria-label={`Visualizar base ${base.name}`}
+            id={`base-${base._id}`}
+          >
+            <span className="line-clamp-1 text-xl font-semibold text-gray-12">
+              {base.name}
+            </span>
+            <div className="flex items-center gap-2 pb-4">
+              <BuildingIcon size={16} />
+              <span className="line-clamp-1 text-sm text-gray-11">
+                {base.type?.name ?? "-"}
               </span>
-              <div className="flex items-center gap-2 pb-4">
-                <BuildingIcon size={16} />
-                <span className="line-clamp-1 text-sm text-gray-11">
-                  {base.type?.name ?? "-"}
+            </div>
+            <div className="grid gap-1">
+              <div className="flex items-center gap-2">
+                <CalendarPlus size={16} />
+                <span className="text-sm text-gray-11">
+                  {dayjs(base.createdAt).format("DD/MM/YYYY")}
                 </span>
               </div>
-              <div className="grid gap-1">
+              {base.updatedAt && (
                 <div className="flex items-center gap-2">
-                  <CalendarPlus size={16} />
+                  <CalendarClock size={16} />
                   <span className="text-sm text-gray-11">
-                    {dayjs(base.createdAt).format("DD/MM/YYYY")}
+                    {dayjs(base.updatedAt).format("DD/MM/YYYY")}
                   </span>
                 </div>
-                {base.updatedAt && (
-                  <div className="flex items-center gap-2">
-                    <CalendarClock size={16} />
-                    <span className="text-sm text-gray-11">
-                      {dayjs(base.updatedAt).format("DD/MM/YYYY")}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </Link>
-          )),
+              )}
+            </div>
+          </Link>
+        )),
       )}
 
       {isFetching &&

@@ -114,8 +114,12 @@ const Drawer = () => {
         </div>
         <Link href="/login" className="hidden md:block" aria-label="Sair">
           <Button
-            className={cn("bg-red-500 text-white", open ? "block" : "hidden")}
+            className={cn(
+              "items-center bg-red-500 text-white",
+              open ? "flex" : "hidden",
+            )}
             onClick={() => logout()}
+            id="logout-button"
           >
             <LogOut className="h-5 w-5" />
             Sair

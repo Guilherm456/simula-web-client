@@ -1,4 +1,4 @@
-"use clent";
+"use client";
 import { Button, Textfield } from "@components/ui";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Base } from "@models/index";

@@ -34,6 +34,9 @@ export const ListStructure: FC<Props> = ({ listInitial }) => {
     },
   });
 
+  if (data?.pages?.[0]?.totalElements === 0 && !isFetching)
+    return <div>Nenhuma estrutura encontrada</div>;
+
   return (
     <InfiniteScroll
       onEndReached={() => {
@@ -41,42 +44,40 @@ export const ListStructure: FC<Props> = ({ listInitial }) => {
       }}
       className="flex flex-col gap-4"
     >
-      {data.pages.map(
-        (page, i) =>
-          page.content?.map((structure) => (
-            <Link
-              key={structure._id}
-              className="gap-1 rounded-md border border-solid border-gray-4 p-4"
-              href={`/estruturas/${structure._id}`}
-              aria-label={`Visualizar estrutura ${structure.name}`}
-              id={`structure-${structure._id}-link`}
-            >
-              <span className="line-clamp-1 pb-4 text-xl font-semibold text-gray-12">
-                {structure.name}
-              </span>
-              <div className="grid gap-1">
-                <div className="flex items-center gap-2">
-                  <FileDigit size={16} />
-                  <span className="line-clamp-1 text-sm text-gray-11">
-                    Total de parâmetros de entrada:{" "}
-                    {structure.lengthParams ?? 0}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UserSearch size={16} />
-                  <span className="text-sm text-gray-11">
-                    Número de agentes: {structure.agents?.length ?? 0}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FolderInput size={16} />
-                  <span className="text-sm text-gray-11">
-                    Pasta: {structure.folder}
-                  </span>
-                </div>
+      {data.pages.map((page, i) =>
+        page.content?.map((structure) => (
+          <Link
+            key={structure._id}
+            className="gap-1 rounded-md border border-solid border-gray-4 p-4"
+            href={`/estruturas/${structure._id}`}
+            aria-label={`Visualizar estrutura ${structure.name}`}
+            id={`structure-${structure._id}-link`}
+          >
+            <span className="line-clamp-1 pb-4 text-xl font-semibold text-gray-12">
+              {structure.name}
+            </span>
+            <div className="grid gap-1">
+              <div className="flex items-center gap-2">
+                <FileDigit size={16} />
+                <span className="line-clamp-1 text-sm text-gray-11">
+                  Total de parâmetros de entrada: {structure.lengthParams ?? 0}
+                </span>
               </div>
-            </Link>
-          )),
+              <div className="flex items-center gap-2">
+                <UserSearch size={16} />
+                <span className="text-sm text-gray-11">
+                  Número de agentes: {structure.agents?.length ?? 0}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FolderInput size={16} />
+                <span className="text-sm text-gray-11">
+                  Pasta: {structure.folder}
+                </span>
+              </div>
+            </div>
+          </Link>
+        )),
       )}
 
       {isFetching &&

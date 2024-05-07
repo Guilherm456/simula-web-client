@@ -39,6 +39,8 @@ export const ListSimulations: FC<Props> = ({ listInitial }) => {
       pageParams: [0],
     },
   });
+  if (data?.pages?.[0]?.totalElements === 0 && !isFetching)
+    return <div>Nenhuma simulação encontrada</div>;
 
   return (
     <InfiniteScroll
@@ -47,48 +49,47 @@ export const ListSimulations: FC<Props> = ({ listInitial }) => {
       }}
       className="flex flex-col gap-4"
     >
-      {data?.pages?.map(
-        (page) =>
-          page?.content?.map((simulation) => (
-            <Link
-              key={simulation._id}
-              className="gap-1 rounded-md border border-solid border-gray-4 p-4"
-              href={`/simulacoes/${simulation._id}`}
-              aria-label={`Visualizar base ${simulation.name}`}
-              id={`base-${simulation._id}`}
-            >
-              <span className="line-clamp-1 text-xl font-semibold text-gray-12">
-                {simulation.name}
+      {data?.pages?.map((page) =>
+        page?.content?.map((simulation) => (
+          <Link
+            key={simulation._id}
+            className="gap-1 rounded-md border border-solid border-gray-4 p-4"
+            href={`/simulacoes/${simulation._id}`}
+            aria-label={`Visualizar base ${simulation.name}`}
+            id={`base-${simulation._id}`}
+          >
+            <span className="line-clamp-1 text-xl font-semibold text-gray-12">
+              {simulation.name}
+            </span>
+            <div className="flex items-center gap-2 pb-4">
+              <Tag className="h-4 w-4" />
+              <span
+                className={cn(
+                  "line-clamp-1 text-sm",
+                  simulationStatus[simulation.status].color,
+                )}
+              >
+                {simulationStatus[simulation.status].label}
               </span>
-              <div className="flex items-center gap-2 pb-4">
-                <Tag className="h-4 w-4" />
-                <span
-                  className={cn(
-                    "line-clamp-1 text-sm",
-                    simulationStatus[simulation.status].color,
-                  )}
-                >
-                  {simulationStatus[simulation.status].label}
+            </div>
+            <div className="grid gap-1">
+              <div className="flex items-center gap-2">
+                <CalendarPlus className="h-4 w-4" />
+                <span className="text-sm text-gray-11">
+                  {dayjs(simulation.createdAt).format("DD/MM/YYYY")}
                 </span>
               </div>
-              <div className="grid gap-1">
-                <div className="flex items-center gap-2">
-                  <CalendarPlus className="h-4 w-4" />
-                  <span className="text-sm text-gray-11">
-                    {dayjs(simulation.createdAt).format("DD/MM/YYYY")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4" />
-                  <span className="text-sm text-gray-11">
-                    {simulation.updatedAt
-                      ? dayjs(simulation.updatedAt).format("DD/MM/YYYY")
-                      : "Não houve atualização"}
-                  </span>
-                </div>
+              <div className="flex items-center gap-2">
+                <CalendarClock className="h-4 w-4" />
+                <span className="text-sm text-gray-11">
+                  {simulation.updatedAt
+                    ? dayjs(simulation.updatedAt).format("DD/MM/YYYY")
+                    : "Não houve atualização"}
+                </span>
               </div>
-            </Link>
-          )),
+            </div>
+          </Link>
+        )),
       )}
 
       {isFetching &&

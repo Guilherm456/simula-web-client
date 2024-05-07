@@ -2,7 +2,7 @@
 import { Button, Textfield } from "@components/ui";
 import { Base } from "@models/index";
 import { updateBase } from "@services/base";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { successNotification } from "@utils/notifications";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
@@ -24,12 +24,19 @@ export const FormBase: FC<Props> = ({ base }) => {
     formState: { isDirty },
   } = form;
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending: loading } = useMutation({
     mutationKey: ["base", base._id],
     mutationFn: async (data: Base) => await updateBase(base._id!, data),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["base", base._id],
+        exact: false,
+      });
+
       successNotification("Base atualizada com sucesso");
-      router.back();
+      router.push(`/base/${base._id}`);
     },
   });
 

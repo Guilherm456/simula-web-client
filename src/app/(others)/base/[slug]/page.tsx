@@ -1,10 +1,10 @@
 import { Card } from "@components/general/Card";
-import { Header } from "@components/general/header";
 import { ParametersTable } from "@components/general/parametersTable/parametersTable";
 import { getBase } from "@services/base";
 import dayjs from "dayjs";
 import { Building, CalendarClock, CalendarPlus } from "lucide-react";
 import { notFound } from "next/navigation";
+import { HeaderPage } from "./components/headerPage";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const data = await getBase(params.slug);
@@ -13,12 +13,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <Header
-        urlEdit={`/base/${data?._id}/editar`}
-        name={data?.name}
-        editable
-        user={data?.user?.toString()}
-      />
+      <HeaderPage base={data} />
 
       <Card title="Informações">
         <div className="flex items-center gap-2">

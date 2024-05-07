@@ -1,4 +1,3 @@
-"use client";
 import { Header } from "@components/general/header";
 import { ParametersTable } from "@components/general/parametersTable/parametersTable";
 import { getSimulation } from "@services/simulation";

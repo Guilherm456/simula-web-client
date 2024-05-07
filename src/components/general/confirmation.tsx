@@ -26,7 +26,7 @@ export const Confirmation: FC<Props> = ({
   onClose,
 
   classnameButtonConfirm,
-  classnameButtonCancel = "border border-solid border-gray-10 bg-transparent",
+  classnameButtonCancel = "border border-solid text-gray-11 border-gray-10 bg-transparent",
 
   loading,
 }) => {
