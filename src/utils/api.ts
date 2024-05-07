@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { errorNotification } from ".";
 import { getTokenClientSide } from "./tokens/clientToken";
 import { getTokenServerSide } from "./tokens/serverToken";
-
 type FetchOptions = RequestInit & { params?: { [key: string]: any } };
 
 const isClientSide = (): boolean => typeof window !== "undefined";
@@ -98,7 +97,8 @@ const fetchWithAuth = {
         errorNotification(`${error?.message ?? "Sem conexão com o servidor"}`);
 
       if (error?.statusCode === 403) {
-        redirect("/login");
+        if (isClientSide()) window.location.href = "/login";
+        else redirect("/login");
       }
 
       throw error?.message ?? "Sem conexão com o servidor";
