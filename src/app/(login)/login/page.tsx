@@ -3,13 +3,9 @@ import { Button, Spinner, Textfield } from "@components/ui";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "@schema/login.schema";
 import { login } from "@services/login";
+import useAuth from "@services/logout";
 import { useMutation } from "@tanstack/react-query";
-import { useAppDispatch } from "@utils/hooks";
-import { successNotification } from "@utils/notifications";
-import { setLogin } from "@utils/store";
-import { setCookie } from "cookies-next";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export default function Login() {
@@ -23,27 +19,12 @@ export default function Login() {
     register,
   } = form;
 
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+  const { login: loginSystem } = useAuth();
 
   const { isPending, mutate } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
-    onSuccess: (data) => {
-      setCookie("access_token", data.access_token, {
-        maxAge: data.maxAge,
-      });
-
-      dispatch(
-        setLogin({
-          isLogged: true,
-          accessToken: data.access_token,
-          user: data.user as any,
-        }),
-      );
-      successNotification("Login efetuado com sucesso!");
-      router.push("/");
-    },
+    onSuccess: loginSystem,
   });
 
   return (

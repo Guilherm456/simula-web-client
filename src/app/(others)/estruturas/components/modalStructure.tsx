@@ -110,7 +110,7 @@ export const ModalStructure: FC<Props> = ({ open, onClose }) => {
         if (!open) handleClose();
       }}
     >
-      <DialogContent className="h-screen w-screen overflow-auto md:h-max md:max-h-[95dvh] md:max-w-4xl">
+      <DialogContent className="max-h-dvh h-[100dvh] w-[100dvw] max-w-[100dvw] overflow-y-auto md:h-[650px] md:w-[770px] md:rounded-l-2xl">
         <DialogHeader>
           <DialogTitle>Criar nova estrutura</DialogTitle>
           <DialogDescription>{textDescription()}</DialogDescription>

@@ -1,7 +1,5 @@
 "use client";
-import { Button } from "@components/ui";
 import { Roles } from "@models/user.model";
-import { logout } from "@services/login";
 import checkRole from "@utils/checkRole";
 import { useAppSelector } from "@utils/hooks";
 import { cn } from "@utils/utils";
@@ -18,6 +16,16 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+
+import {
+  Button,
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@components/ui";
+import useAuth from "@services/logout";
 
 const options = [
   {
@@ -54,6 +62,7 @@ const Drawer = () => {
   const user = useAppSelector((state) => state.login.user);
   const pathName = usePathname();
 
+  const { logout } = useAuth();
   const renderDrawer = () => (
     <>
       <Button
@@ -67,7 +76,12 @@ const Drawer = () => {
         {open ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
       </Button>
 
-      <div id="drawer-menu" role="menu" aria-hidden={!open}>
+      <div
+        id="drawer-menu"
+        className={cn(!open && "max-md:hidden")}
+        role="menu"
+        aria-hidden={!open}
+      >
         {options
           .filter(
             (option) =>
@@ -102,29 +116,55 @@ const Drawer = () => {
       </div>
 
       <div className="grid gap-2 p-4 md:p-6">
-        <div className="flex items-center gap-4 text-gray-900 ">
-          <div className="rounded-full bg-gray-300 p-2 text-gray-12">
-            <CircleUser className="h-5 w-5" />
-          </div>
-          <span
-            className={cn("hidden w-full text-base", open ? "block" : "hidden")}
-          >
-            {user?.name ?? "-"}
-          </span>
-        </div>
-        <Link href="/login" className="hidden md:block" aria-label="Sair">
-          <Button
-            className={cn(
-              "items-center bg-red-500 text-white",
-              open ? "flex" : "hidden",
-            )}
-            onClick={() => logout()}
-            id="logout-button"
-          >
-            <LogOut className="h-5 w-5" />
-            Sair
-          </Button>
-        </Link>
+        {open ? (
+          <>
+            <div className="flex items-center gap-4 text-gray-900 ">
+              <div className="rounded-full bg-gray-300 p-2 text-gray-12">
+                <CircleUser className="h-5 w-5" />
+              </div>
+              <span className={cn(open ? "line-clamp-1 " : "hidden")}>
+                {user?.name ?? "-"}
+              </span>
+            </div>
+            <Link
+              href="/login"
+              className={open ? "flex" : "hidden"}
+              aria-label="Sair"
+            >
+              <Button
+                className={cn(
+                  "items-center bg-red-500 text-white",
+                  open ? "flex" : "hidden",
+                )}
+                onClick={() => logout()}
+                id="logout-button"
+              >
+                <LogOut className="h-5 w-5" />
+                Sair
+              </Button>
+            </Link>
+          </>
+        ) : (
+          <Menubar>
+            <MenubarMenu>
+              <MenubarTrigger asChild>
+                <div className="flex cursor-pointer items-center gap-4 text-gray-900">
+                  <div className="rounded-full bg-gray-300 p-2 text-gray-12">
+                    <CircleUser className="h-5 w-5" />
+                  </div>
+                  <span className={cn("hidden w-full text-base")}>
+                    {user?.name ?? "-"}
+                  </span>
+                </div>
+              </MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem onClick={() => logout()} id="logout-menu-item">
+                  <LogOut className="mr-2 h-4 w-4" /> Sair
+                </MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        )}
       </div>
     </>
   );
@@ -133,11 +173,11 @@ const Drawer = () => {
     <>
       <aside
         className={cn(
-          "group flex justify-between bg-gray-200 md:min-h-screen",
-          open ? "md:w-1/4" : "md:w-min",
-          "md:flex-col",
-          "transition-all duration-300 ease-out",
-          "fixed left-0 top-0 z-50 md:relative",
+          "group bg-gray-200",
+          open
+            ? "fixed inset-0 z-50 justify-between md:relative md:min-h-screen md:w-1/4"
+            : "fixed left-0 top-0 z-50 w-full justify-between md:relative md:w-min",
+          "flex transition-all duration-300 ease-out md:flex-col",
         )}
         aria-label="Menu lateral"
       >
@@ -154,7 +194,7 @@ const Drawer = () => {
 
       {open && (
         <div
-          className="group fixed inset-0 z-[100] flex h-full w-3/4 flex-col justify-between bg-gray-200 p-4 md:hidden"
+          className="group fixed inset-0 z-[100] flex h-full w-full flex-col justify-between bg-gray-200 p-4 md:hidden"
           id="drawer-menu"
           aria-expanded={open}
         >

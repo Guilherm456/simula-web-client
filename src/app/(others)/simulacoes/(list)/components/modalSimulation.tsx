@@ -92,7 +92,7 @@ export const ModalSimulation: FC<Props> = ({ onClose, open }) => {
         if (!open) handleClose();
       }}
     >
-      <DialogContent>
+      <DialogContent className="max-h-dvh h-[100dvh] w-[100dvw] max-w-[100dvw] overflow-y-auto md:h-[650px] md:w-[770px] md:rounded-l-2xl">
         <DialogHeader>
           <DialogTitle id="title-simulation-modal">Criar simulação</DialogTitle>
           <DialogDescription>

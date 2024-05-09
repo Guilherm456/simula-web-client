@@ -1,4 +1,3 @@
-"use client";
 import {
   Button,
   Dialog,
@@ -40,6 +39,7 @@ export const ModalUser: FC<Props> = ({ onClose, open }) => {
   } = form;
 
   const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationKey: ["user"],
     mutationFn: createUser,
@@ -69,7 +69,7 @@ export const ModalUser: FC<Props> = ({ onClose, open }) => {
         if (!state) handleClose();
       }}
     >
-      <DialogContent>
+      <DialogContent className="max-h-dvh h-[100dvh] w-[100dvw] max-w-[100dvw] overflow-y-auto md:h-[650px] md:w-[770px] md:rounded-l-2xl">
         <DialogHeader>
           <DialogTitle>Cadastrar novo usuário</DialogTitle>
           <DialogDescription>

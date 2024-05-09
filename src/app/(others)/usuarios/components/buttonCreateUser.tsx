@@ -1,12 +1,17 @@
 "use client";
 
 import { Button } from "@components/ui";
+import { useAppSelector } from "@utils/hooks";
 import { Plus } from "lucide-react";
 import { FC, useState } from "react";
 import { ModalUser } from "./modalUser";
 
 export const ButtonCreateUser: FC = () => {
   const [open, setOpen] = useState(false);
+
+  const user = useAppSelector((state) => state.login.user);
+
+  if (user?.role === "guest") return null;
 
   return (
     <>

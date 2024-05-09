@@ -2,6 +2,7 @@ export * from "./autocomplete";
 export * from "./button";
 export * from "./checkbox";
 export * from "./dialog";
+export * from "./menubar";
 export * from "./select";
 export * from "./sonner";
 export * from "./spinner";
