@@ -14,7 +14,7 @@ interface Props {
 export const Auth: FC<Props> = ({ children }) => {
   const isLogged = useAppSelector((state) => state.login.isLogged);
 
-  const { login, logout } = useAuth();
+  const { logout } = useAuth();
 
   const router = useRouter();
   const dispatch = useAppDispatch();

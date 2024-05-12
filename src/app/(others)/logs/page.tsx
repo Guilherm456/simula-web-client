@@ -8,8 +8,7 @@ export default function Page() {
   const [logs, setLogs] = useState<Log[]>([]);
 
   useEffect(() => {
-    const actualSocket = io(`${process.env.NEXT_PUBLIC_API}`, {
-      path: "/log",
+    const actualSocket = io(`${process.env.NEXT_PUBLIC_API}/log`, {
       extraHeaders: {
         "Access-Control-Allow-Origin": "*",
       },
