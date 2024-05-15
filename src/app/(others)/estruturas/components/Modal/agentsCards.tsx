@@ -3,15 +3,8 @@ import { Button, Textfield } from "@components/ui";
 import { Plus, Trash } from "lucide-react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
-import "ace-builds/src-min-noconflict/theme-github_dark";
-import "ace-builds/src-noconflict/ext-beautify";
-// import "ace-builds/src-noconflict/ext-language_tools";
-// import "ace-builds/src-noconflict/ext-language_tools";
 import { structureSchema } from "@schema/structure.schema";
-import "ace-builds/src-noconflict/ext-error_marker";
-import "ace-builds/src-noconflict/ext-settings_menu";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/snippets/javascript";
+
 import { InferType } from "yup";
 import { CodeTextArea } from "../codeInput";
 
@@ -103,6 +96,8 @@ export const AgentsCard = () => {
                     {...field}
                     label="Código de extração de dados"
                     id={`agents.${index}.onData-input`}
+                    name={`agents.${index}.onData`}
+                    style={{ width: "100%", height: 200 }}
                   />
                 )}
               />
