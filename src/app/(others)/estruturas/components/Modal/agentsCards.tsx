@@ -1,3 +1,4 @@
+"use client";
 import { Button, Textfield } from "@components/ui";
 import { Plus, Trash } from "lucide-react";
 import AceEditor from "react-ace-builds";
@@ -5,7 +6,6 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
 import "ace-builds/src-min-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/mode-javascript";
-
 export const AgentsCard = () => {
   const {
     register,
@@ -84,20 +84,24 @@ export const AgentsCard = () => {
                 name={`agents.${index}.onData`}
                 control={control}
                 render={({ field }) => (
-                  <AceEditor
-                    mode="java"
-                    theme="github_dark"
-                    onChange={(value) => {
-                      field.onChange(value);
-                    }}
-                    value={field.value}
-                    style={{ width: "100%", height: 200 }}
-                    name={`agents.${index}.onData`}
-                    enableLiveAutocompletion
-                    setOptions={{
-                      useWorker: false,
-                    }}
-                  />
+                  <div className="flex w-full flex-col gap-2">
+                    <label className={"font-medium text-gray-12"}>
+                      Código de processamento de dados
+                    </label>
+                    <AceEditor
+                      mode="java"
+                      theme="github_dark"
+                      onChange={(value) => {
+                        field.onChange(value);
+                      }}
+                      value={field.value}
+                      style={{ width: "100%", height: 200 }}
+                      name={`agents.${index}.onData`}
+                      setOptions={{
+                        useWorker: false,
+                      }}
+                    />
+                  </div>
                 )}
               />
             </div>
