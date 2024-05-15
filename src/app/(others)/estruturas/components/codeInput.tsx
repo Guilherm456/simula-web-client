@@ -28,6 +28,7 @@ export const CodeTextArea = forwardRef<AceEditorProps, Props>(
           showPrintMargin
           fontSize={14}
           enableBasicAutocompletion
+          enableLiveAutocompletion
           ref={ref}
           {...props}
         />
