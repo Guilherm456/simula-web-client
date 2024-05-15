@@ -1,6 +1,7 @@
 "use client";
 
 import { Log } from "@models/logs.model";
+import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
@@ -8,9 +9,11 @@ export default function Page() {
   const [logs, setLogs] = useState<Log[]>([]);
 
   useEffect(() => {
-    const actualSocket = io(`${process.env.NEXT_PUBLIC_API}/log`, {
+    const actualSocket = io(`${process.env.NEXT_PUBLIC_API}`, {
+      transports: ["websocket"],
+      path: "/log",
       extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${getCookie("access_token")}`,
       },
     });
 
