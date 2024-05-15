@@ -1,7 +1,9 @@
 import { Button, Select, SelectItem, Textfield } from "@components/ui";
+import { structureSchema } from "@schema/structure.schema";
 import { Trash } from "lucide-react";
 import { FC } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { InferType } from "yup";
 
 interface Props {
   index: number;
@@ -9,13 +11,22 @@ interface Props {
   onDelete: (index: number) => void;
 }
 export const ValuesInput: FC<Props> = ({ index, path, onDelete }) => {
-  const { control, register } = useFormContext();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<InferType<typeof structureSchema>>();
 
   const pathCurrent = `${path}.${index}`;
 
   return (
     <div className="flex gap-2">
-      <Textfield label="Nome do valor" {...register(`${pathCurrent}.name`)} />
+      <Textfield
+        label="Nome do valor"
+        {...register(`${pathCurrent}.name`)}
+        error={!!errors?.[path]?.[index]?.name}
+        errorMessage={errors?.[path]?.[index]?.name?.message}
+      />
       <Controller
         name={`${pathCurrent}.type`}
         control={control}

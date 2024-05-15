@@ -1,17 +1,26 @@
 "use client";
 import { Button, Textfield } from "@components/ui";
 import { Plus, Trash } from "lucide-react";
-import AceEditor from "react-ace-builds";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
 import "ace-builds/src-min-noconflict/theme-github_dark";
+import "ace-builds/src-noconflict/ext-beautify";
+// import "ace-builds/src-noconflict/ext-language_tools";
+// import "ace-builds/src-noconflict/ext-language_tools";
+import { structureSchema } from "@schema/structure.schema";
+import "ace-builds/src-noconflict/ext-error_marker";
+import "ace-builds/src-noconflict/ext-settings_menu";
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/snippets/javascript";
+import { InferType } from "yup";
+import { CodeTextArea } from "../codeInput";
+
 export const AgentsCard = () => {
   const {
     register,
     formState: { errors },
     control,
-  } = useFormContext();
+  } = useFormContext<InferType<typeof structureSchema>>();
 
   const { fields, append, remove } = useFieldArray({
     name: "agents",
@@ -66,42 +75,35 @@ export const AgentsCard = () => {
               <Textfield
                 label="Nome"
                 {...register(`agents.${index}.name`)}
-                className="input"
+                error={!!errors.agents?.[index]?.name}
+                errorMessage={errors.agents?.[index]?.name?.message}
+                id={`agents.${index}.name-input`}
               />
               <Textfield
                 label="Label"
                 {...register(`agents.${index}.label`)}
-                className="input"
+                error={!!errors.agents?.[index]?.label}
+                errorMessage={errors.agents?.[index]?.label?.message}
+                id={`agents.${index}.label-input`}
               />
               <Textfield
                 label="Cor"
                 type="color"
                 {...register(`agents.${index}.color`)}
-                className="input"
+                error={!!errors.agents?.[index]?.color}
+                errorMessage={errors.agents?.[index]?.color?.message}
+                id={`agents.${index}.color-input`}
               />
 
               <Controller
                 name={`agents.${index}.onData`}
                 control={control}
                 render={({ field }) => (
-                  <div className="flex w-full flex-col gap-2">
-                    <label className={"font-medium text-gray-12"}>
-                      Código de processamento de dados
-                    </label>
-                    <AceEditor
-                      mode="java"
-                      theme="github_dark"
-                      onChange={(value) => {
-                        field.onChange(value);
-                      }}
-                      value={field.value}
-                      style={{ width: "100%", height: 200 }}
-                      name={`agents.${index}.onData`}
-                      setOptions={{
-                        useWorker: false,
-                      }}
-                    />
-                  </div>
+                  <CodeTextArea
+                    {...field}
+                    label="Código de extração de dados"
+                    id={`agents.${index}.onData-input`}
+                  />
                 )}
               />
             </div>

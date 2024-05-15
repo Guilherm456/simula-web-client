@@ -1,12 +1,21 @@
 import yup from "@utils/yup";
 
 const ValuesSchema = yup.object().shape({
-  name: yup.string().required().label("Nome"),
-  type: yup.string().is(["number", "string", "mixed"]).required().label("Tipo"),
+  name: yup.string().required().label("Nome do valor"),
+  type: yup
+    .string()
+    .is(["number", "string", "mixed"])
+    .required()
+    .label("Tipo de valor"),
 });
 const SubParametersSchema = yup.object().shape({
-  name: yup.string().required().label("Nome"),
-  values: yup.array().of(ValuesSchema).min(1).required().label("Valores"),
+  name: yup.string().required().label("Nome do subparâmetro"),
+  values: yup
+    .array()
+    .of(ValuesSchema)
+    .min(1)
+    .required()
+    .label("Valores do subparâmetro"),
 });
 
 const ParametersSchema = yup.object().shape({
@@ -35,7 +44,6 @@ const ParametersSchema = yup.object().shape({
 
     .label("Subparâmetros"),
 });
-
 export const structureSchema = yup.object().shape({
   name: yup.string().required().label("Nome"),
   folder: yup
@@ -46,12 +54,12 @@ export const structureSchema = yup.object().shape({
   inputsFolder: yup
     .string()
     .required()
-    .matches(/^[a-zA-Z0-9_]*$/, "Apenas letras, números e _")
+    .matches(/^[a-zA-Z0-9_/]*$/, "Apenas letras, números, _ e /")
     .label("Pasta de entrada dos parâmetros"),
   resultsFolder: yup
     .string()
     .required()
-    .matches(/^[a-zA-Z0-9_]*$/, "Apenas letras, números e _")
+    .matches(/^[a-zA-Z0-9_/]*$/, "Apenas letras, números, _ e /")
     .label("Pasta de saída dos resultados"),
   executeCommand: yup
     .string()
@@ -61,13 +69,17 @@ export const structureSchema = yup.object().shape({
     .array()
     .of(
       yup.object().shape({
-        name: yup.string().required().label("Nome"),
-        attributes: yup.array().of(
-          yup.object().shape({
-            name: yup.string().required().label("Nome"),
-            type: yup.string().required().label("Tipo"),
-          }),
-        ),
+        name: yup.string().required().label("Nome do agente"),
+        label: yup
+          .string()
+          .required()
+          .label("Rótulo do agente")
+          .matches(
+            /^[a-zA-Z]*$/,
+            "O rótulo do agente deve conter apenas letras",
+          ),
+        color: yup.string().required().label("Cor do agente"),
+        onData: yup.string().required().label("Função onData"),
       }),
     )
     .min(1)
@@ -86,3 +98,5 @@ export const structureSchema = yup.object().shape({
     .required()
     .label("Parâmetros de saída"),
 });
+
+type StructureSchemaType = yup.InferType<typeof structureSchema>;

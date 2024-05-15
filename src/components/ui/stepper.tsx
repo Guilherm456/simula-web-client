@@ -55,7 +55,7 @@ export const Stepper: FC<Props> = ({ value, onChange, steps }) => {
               </span>
             </li>
             <div
-              key={index}
+              key={`separator-${index}`}
               className={cn(
                 "h-[1px] w-full",
                 index < steps.length - 1 ? "" : "hidden",

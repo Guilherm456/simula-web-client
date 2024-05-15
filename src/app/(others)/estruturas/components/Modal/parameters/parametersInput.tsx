@@ -49,7 +49,6 @@ export const ParametersInput: FC<Props> = ({
         <Textfield
           label={`Nome do ${isSubParameter ? "subparâmetro" : "parâmetro"}`}
           {...register(`${pathCurrent}.name`)}
-          className="input"
         />
         <Select
           label="Tipo"

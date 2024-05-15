@@ -71,6 +71,20 @@ export const ModalStructure: FC<Props> = ({ open, onClose }) => {
     }
   };
 
+  const extractError = (errors: object | { message: string }): string => {
+    if ((errors as { message: string }).message)
+      return (errors as { message: string }).message;
+
+    for (const key in errors) {
+      return extractError(errors[key]);
+    }
+
+    return "Erro ao criar estrutura";
+  };
+
+  const showError = (errors: object | { message: string }) =>
+    errorNotification(extractError(errors));
+
   const textDescription = () => {
     switch (step) {
       case 1:
@@ -124,15 +138,15 @@ export const ModalStructure: FC<Props> = ({ open, onClose }) => {
               if (step === 4) {
                 handleSubmit(mutate as any, (errors) => {
                   if (errors.parameters) {
-                    errorNotification(errors.parameters.message);
+                    showError(errors.parameters);
                     setStep(2);
                   } else if (errors.outputsParameters) {
-                    errorNotification(errors.outputsParameters.message);
+                    showError(errors.outputsParameters);
                     setStep(3);
                   } else if (errors.agents) {
-                    errorNotification(errors.agents.message);
+                    showError(errors.agents);
                     setStep(4);
-                  } else setStep(step + 1);
+                  } else setStep(1);
                 })();
               } else {
                 setStep(step + 1);
