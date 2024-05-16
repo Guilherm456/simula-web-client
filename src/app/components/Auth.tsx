@@ -42,7 +42,11 @@ export const Auth: FC<Props> = ({ children }) => {
         if (pathName.includes("login")) {
           router.push("/");
         }
-      } else router.push("/login");
+      } else if (
+        !pathName.includes("recuperar-senha") &&
+        !pathName.includes("login")
+      )
+        router.push("/login");
     }
   };
 
