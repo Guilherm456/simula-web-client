@@ -34,7 +34,7 @@ export default function Page({ params }) {
     },
     onSuccess: () => {
       successNotification("Senha alterada com sucesso!");
-      // router.push("/login");
+      router.push("/login");
     },
   });
 
