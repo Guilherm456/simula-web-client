@@ -31,16 +31,16 @@ export const SelectStatus = () => {
       }}
     >
       <SelectItem value="all" id="select-option-all">
-        Todos
+        Todas
       </SelectItem>
       <SelectItem value="PENDING" id="select-option-pending">
-        Novos
+        Novas
       </SelectItem>
       <SelectItem value="RUNNING" id="select-option-running">
         Em execução
       </SelectItem>
       <SelectItem value="FINISHED" id="select-option-finished">
-        Finalizados
+        Finalizadas
       </SelectItem>
       <SelectItem value="ERROR" id="select-option-error">
         Erro

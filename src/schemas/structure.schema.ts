@@ -1,7 +1,7 @@
 import yup from "@utils/yup";
 
 const ValuesSchema = yup.object().shape({
-  name: yup.string().required().label("Nome do valor"),
+  name: yup.string().required().label("Nome do valor de um parâmetro"),
   type: yup
     .string()
     .is(["number", "string", "mixed"])
@@ -19,21 +19,21 @@ const SubParametersSchema = yup.object().shape({
 });
 
 const ParametersSchema = yup.object().shape({
-  name: yup.string().required().label("Nome"),
+  name: yup.string().required().label("Nome do parâmetro"),
   // Caso tenha um values, não pode ter subParameters, caso tenha subParameters, não pode ter values
   values: yup
     .array()
     .of(ValuesSchema)
     .test(
       "valuesOrSubParameters",
-      "Não pode ter valores e subparâmetros ao mesmo tempo",
+      "Não pode ter valores e subparâmetros ao mesmo tempo dentro do parâmetro",
       function (value) {
         return !value || !this.parent.subparameters;
       },
     )
     .test(
       "needsOneValue",
-      "Deve ter pelo menos um valor",
+      "Deve ter pelo menos um valor ou subparâmetro dentro do parâmetro",
       function (value, context) {
         return context.parent.subparameters || value.length > 0;
       },
@@ -45,7 +45,7 @@ const ParametersSchema = yup.object().shape({
     .label("Subparâmetros"),
 });
 export const structureSchema = yup.object().shape({
-  name: yup.string().required().label("Nome"),
+  name: yup.string().required().label("Nome da estrutura"),
   folder: yup
     .string()
     .required()

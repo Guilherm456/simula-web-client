@@ -35,8 +35,8 @@ yup.setLocale({
   },
 
   array: {
-    min: "${path} deve ter no mínimo ${min} itens",
-    max: "${path} deve ter no máximo ${max} itens",
+    min: "${path} deve ter no mínimo ${min} item/itens",
+    max: "${path} deve ter no máximo ${max} item/itens",
   },
 });
 
